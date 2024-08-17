@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Educational Assistant</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+      }
+      .container {
+        max-width: 900px;
+        margin-top: 50px;
+      }
+      .about-section {
+        background-color: #f1f1f1;
+        padding: 20px;
+        border-radius: 8px;
+        margin-right: 20px;
+      }
+      .question-section {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        margin-bottom: 20px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <form method="get" action="/log">
+        <button type="submit">LOG</button>
+      </form>
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="about-section">
+            <h4>About</h4>
+            <p>
+              This AI-powered educational assistant helps students by providing accurate answers to
+              their questions, explaining complex concepts, summarizing textbook content, and
+              generating personalized study plans. Powered by the Gemini API and built with
+              Streamlit.
+            </p>
+            <label for="optionSelect" class="form-label">Choose an option</label>
+            <select
+              class="form-select"
+              id="optionSelect"
+              onchange="updateSelectedOption()"
+            >
+              <option value="ask-question" selected>Ask a Question</option>
+              <option value="explain-concept">Explain a Concept</option>
+              <option value="summarize-textbook">Summarize Textbook</option>
+              <option value="personalized-study-plan">Personalized Study Plan</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="question-section">
+            <div class="header">
+              <h2>Educational Assistant <span role="img" aria-label="book">📖</span></h2>
+            </div>
+            <div id="contentArea">
+              <!-- Initial form content -->
+
+              <form method="post" action="/" id="questionForm">
+                <div class="mb-3">
+                  <label for="questionInput" class="form-label">Ask a Question</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="questionInput"
+                    name="prompt"
+                    placeholder="Enter your question"
+                  />
+                </div>
+                <!-- Hidden field to store the selected option -->
+                <input
+                  type="hidden"
+                  id="selectedOption"
+                  name="selectedOption"
+                  value="ask-question"
+                />
+                <button type="submit" class="btn btn-primary">Get Answer</button>
+
+
+
+              </form>
+                      <% if (locals.text) { %>
+                        <p><%= text %></p>
+  <form method="post" action="/log">
+     <!-- Display the text -->
+    <input type="hidden" name="sample" value="<%= text %>"> <!-- Hidden input to submit the text -->
+    <button type="submit">Save</button>
+  </form>
+<% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function updateSelectedOption() {
+        const selectElement = document.getElementById("optionSelect");
+
+        // After content update, retrieve the hidden input element
+        const hiddenInput = document.getElementById("selectedOption");
+        hiddenInput.value = selectElement.value; // Update the hidden input with the selected option
+        updateContent();
+      }
+
+      function updateContent() {
+        const contentArea = document.getElementById("contentArea");
+        const selectedOption = document.getElementById("optionSelect").value;
+  
+        let newContent = "";
+
+        switch (selectedOption) {
+          case "ask-question":
+            newContent = `
+                    <form method="post" action="/">
+                        <div class="mb-3">
+                            <label for="questionInput" class="form-label">Ask a Question</label>
+                            <input type="text" class="form-control" id="questionInput" name="prompt" placeholder="Enter your question">
+                        </div>
+                        <input type="hidden" id="selectedOption" name="selectedOption" value="ask-question">
+                        <button type="submit" class="btn btn-primary">Get Answer</button>
+                    </form>`;
+            break;
+          case "explain-concept":
+            newContent = `
+                    <form method="post" action="/">
+                        <div class="mb-3">
+                            <label for="conceptInput" class="form-label">Enter the concept you want explained</label>
+                            <input type="text" class="form-control" id="conceptInput" name="concept" placeholder="Enter the concept">
+                        </div>
+                        <input type="hidden" id="selectedOption" name="selectedOption" value="explain-concept">
+                        <button type="submit" class="btn btn-primary">Explain Concept</button>
+                    </form>`;
+            break;
+          case "summarize-textbook":
+            newContent = `
+<form method="post" action="/" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="pdfUpload" class="form-label">Upload a PDF file</label>
+        <div class="mb-3">
+            <div class="custom-file">
+                <input type="file" class="form-control" id="pdfUpload" name="pdfFile" accept=".pdf">
+                <div class="text-center pt-3">
+                    <label for="pdfUpload" class="form-label">Drag and drop PDF file here</label>
+                    <p class="text-muted">Limit 200MB per file • PDF</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="selectedOption" name="selectedOption" value="summarize-textbook">
+    <button type="submit" class="btn btn-primary">Summarize Textbook</button>
+</form>`;
+
+            break;
+          case "personalized-study-plan":
+            newContent = `
+                    <form method="post" action="/">
+                        <div class="mb-3">
+                            <label for="subjectsInput" class="form-label">Enter the subjects you need help with (comma-separated)</label>
+                            <input type="text" class="form-control" id="subjectsInput" name="subjects" placeholder="Enter the subjects">
+                        </div>
+                        <div class="mb-3">
+                            <label for="hoursInput" class="form-label">How many hours can you study per day?</label>
+                            <input type="range" class="form-range" min="1" max="24" id="hoursInput" name="hours" oninput="document.getElementById('hoursValue').textContent = this.value;">
+                            <span id="hoursValue">8</span>
+                        </div>
+                        <input type="hidden" id="selectedOption" name="selectedOption" value="personalized-study-plan">
+                        <button type="submit" class="btn btn-primary">Get Study Plan</button>
+                    </form>`;
+            break;
+         
+        }
+
+        contentArea.innerHTML = newContent; // Update the content area
+      }
+      // updateContent()
+    </script>
+  </body>
+</html>

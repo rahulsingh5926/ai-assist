@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATS Feedback</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <form method="get" action="/">
+  <button type="submit">home</button>
+</form>
+
+  <% if (locals.result) { %>
+    <% result.forEach((a)=>{ %>
+      <p><%= a.text %></p>
+    <% }); %>
+  <% } else { %>
+    <p>No results found.</p>
+  <% } %>
+</body>
+</html>
