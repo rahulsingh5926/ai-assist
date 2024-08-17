@@ -24,9 +24,19 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
-async function handleAskQuestion(prompt) {
+async function handleAskQuestion(userPrompt) {
   try {
-    const result = await model.generateContent(prompt);
+    const refinedPrompt = `
+      Context: You are a knowledgeable assistant helping a user with a question.
+      Task: Answer the following question clearly and concisely: "${userPrompt}".
+      Guidelines:
+      1. Provide a direct and accurate answer.
+      2. If the question is complex, break down the explanation into simple, easy-to-understand steps.
+      3. Include relevant examples or analogies if they help clarify the concept.
+      4. Avoid unnecessary details, but be thorough where required.
+      5. Conclude with a brief summary or additional tips if applicable.
+    `;
+    const result = await model.generateContent(refinedPrompt);
     return result.response.text(); // Adjust based on actual API response structure
   } catch (error) {
     console.error("Error generating text:", error);
@@ -34,19 +44,49 @@ async function handleAskQuestion(prompt) {
   }
 }
 
+
+// async function handleExplainAconcept(concept) {
+//   try {
+//     const result = await model.generateContent(concept);
+//     return result.response.text(); // Adjust based on actual API response structure
+//   } catch (error) {
+//     console.error("Error generating text:", error);
+//     throw error;
+//   }
+// }
 async function handleExplainAconcept(concept) {
   try {
-    const result = await model.generateContent(concept);
+    const refinedPrompt = `
+      Context: You are an expert AI assistant helping a user who has a basic understanding of the topic.
+      Task: Please explain the concept of "${concept}" clearly and concisely.
+      Format: 
+      1. Begin with a brief definition.
+      2. Provide a step-by-step explanation of the main points.
+      3. Include an example or analogy to illustrate the concept.
+      4. Conclude with any additional details or tips that could help the user understand better.
+    `;
+    const result = await model.generateContent(refinedPrompt);
     return result.response.text(); // Adjust based on actual API response structure
   } catch (error) {
     console.error("Error generating text:", error);
     throw error;
   }
 }
+
 
 async function handlePersonalizedStudyPlan(subjects, hours) {
   try {
-    const prompt = `Create a personalized study plan for the following subjects: ${subjects} within ${hours} hours.`;
+    const prompt = `
+      Context: You are an expert study planner helping a student prepare efficiently for their exams.
+      Task: Create a personalized study plan for the following subjects: ${subjects}. 
+      Constraints: The total study time available is ${hours} hours.
+      Guidelines:
+      1. Distribute the study time based on the importance or difficulty of each subject.
+      2. Include short breaks to maintain focus and energy.
+      3. Ensure that the plan balances between revising previously learned material and tackling new topics.
+      4. Provide a clear, time-based schedule (e.g., 9:00 AM - 10:00 AM: Subject 1).
+      5. Add any tips or suggestions for effective study.
+    `;
     const result = await model.generateContent(prompt);
     return result.response.text(); // Adjust based on actual API response structure
   } catch (error) {
@@ -107,7 +147,7 @@ app.post("/", upload.single("pdfFile"), async (req, res) => {
         break;
     
     }
-    res.render("index", { text: result, option: selectedOption });
+    res.render("index", { text: result });
   } catch (error) {
     res.status(500).send("An error occurred.");
   }

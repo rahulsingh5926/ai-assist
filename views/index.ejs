@@ -13,33 +13,51 @@
         background-color: #f8f9fa;
       }
       .container {
-        max-width: 900px;
+        max-width: 1000px;
         margin-top: 50px;
       }
       .about-section {
         background-color: #f1f1f1;
         padding: 20px;
         border-radius: 8px;
-        margin-right: 20px;
+        margin-right: 15px;
+        height: 90vh;
       }
       .question-section {
         background-color: white;
         padding: 20px;
         border-radius: 8px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        height: 90vh;
       }
       .header {
         margin-bottom: 20px;
         text-align: center;
       }
+      button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
     </style>
   </head>
   <body>
-    <div class="container">
+    <div class="d-flex align-items-center justify-content-end m-3">
       <form method="get" action="/log">
         <button type="submit">LOG</button>
       </form>
+    </div>
 
+    <div class="container-fluid">
       <div class="row">
         <div class="col-md-4">
           <div class="about-section">
@@ -51,11 +69,7 @@
               Streamlit.
             </p>
             <label for="optionSelect" class="form-label">Choose an option</label>
-            <select
-              class="form-select"
-              id="optionSelect"
-              onchange="updateSelectedOption()"
-            >
+            <select class="form-select" id="optionSelect" onchange="updateSelectedOption()">
               <option value="ask-question" selected>Ask a Question</option>
               <option value="explain-concept">Explain a Concept</option>
               <option value="summarize-textbook">Summarize Textbook</option>
@@ -90,18 +104,16 @@
                   value="ask-question"
                 />
                 <button type="submit" class="btn btn-primary">Get Answer</button>
-
-
-
               </form>
-                      <% if (locals.text) { %>
-                        <p><%= text %></p>
-  <form method="post" action="/log">
-     <!-- Display the text -->
-    <input type="hidden" name="sample" value="<%= text %>"> <!-- Hidden input to submit the text -->
-    <button type="submit">Save</button>
-  </form>
-<% } %>
+              <% if (locals.text) { %>
+              <p><%= text %></p>
+              <form method="post" action="/log">
+                <!-- Display the text -->
+                <input type="hidden" name="sample" value="<%= text %>" />
+                <!-- Hidden input to submit the text -->
+                <button type="submit">Save</button>
+              </form>
+              <% } %>
             </div>
           </div>
         </div>
@@ -121,7 +133,7 @@
       function updateContent() {
         const contentArea = document.getElementById("contentArea");
         const selectedOption = document.getElementById("optionSelect").value;
-  
+
         let newContent = "";
 
         switch (selectedOption) {
@@ -183,12 +195,10 @@
                         <button type="submit" class="btn btn-primary">Get Study Plan</button>
                     </form>`;
             break;
-         
         }
 
         contentArea.innerHTML = newContent; // Update the content area
       }
-      // updateContent()
     </script>
   </body>
 </html>

@@ -4,19 +4,80 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ATS Feedback</title>
-  <link rel="stylesheet" href="/css/styles.css">
+  
+  <style>
+    /* General page styling */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+/* Form styling */
+form {
+  margin-bottom: 20px;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Result section styling */
+p {
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  width: 100%;
+  max-width: 600px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+/* Styling for the no results message */
+.no-results {
+  color: #999;
+  font-style: italic;
+}
+
+  
+</style>
 </head>
+
 <body>
-    <form method="get" action="/">
-  <button type="submit">home</button>
-</form>
+  <form method="get" action="/">
+    <button type="submit">Home</button>
+  </form>
 
   <% if (locals.result) { %>
-    <% result.forEach((a)=>{ %>
+    <% result.forEach((a) => { %>
       <p><%= a.text %></p>
     <% }); %>
   <% } else { %>
-    <p>No results found.</p>
+    <p class="no-results">No results found.</p>
   <% } %>
 </body>
 </html>
