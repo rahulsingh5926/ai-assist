@@ -44,16 +44,6 @@ async function handleAskQuestion(userPrompt) {
   }
 }
 
-
-// async function handleExplainAconcept(concept) {
-//   try {
-//     const result = await model.generateContent(concept);
-//     return result.response.text(); // Adjust based on actual API response structure
-//   } catch (error) {
-//     console.error("Error generating text:", error);
-//     throw error;
-//   }
-// }
 async function handleExplainAconcept(concept) {
   try {
     const refinedPrompt = `
@@ -72,7 +62,6 @@ async function handleExplainAconcept(concept) {
     throw error;
   }
 }
-
 
 async function handlePersonalizedStudyPlan(subjects, hours) {
   try {
@@ -145,7 +134,6 @@ app.post("/", upload.single("pdfFile"), async (req, res) => {
       case "personalized-study-plan":
         result = await handlePersonalizedStudyPlan(subjects, hours);
         break;
-    
     }
     res.render("index", { text: result });
   } catch (error) {
@@ -155,24 +143,53 @@ app.post("/", upload.single("pdfFile"), async (req, res) => {
 
 app.post("/log", async (req, res) => {
   const sample = req.body.sample;
-
-  if (!sample) {
-    return res.status(400).json({ error: "Text is required" });
-  }
+  const data = req.body.logData;
 
   try {
-     const textValue = typeof sample === "object" ? JSON.stringify(sample) : sample;
-    await URL.create({ text: textValue });
-    res.render("index"); // Redirect to display saved logs
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    if (sample) {
+      const textValue = typeof sample === "object" ? JSON.stringify(sample) : sample;
+      await URL.create({ text: textValue });
+      return res.render("index"); // Ensure only one response is sent
+    }
+
+    if (data) {
+      await URL.deleteOne({ text: data });
+      return res.render("log"); // Ensure only one response is sent
+    }
+
+    // If neither `sample` nor `data` is provided, handle accordingly
+    res.status(400).send("No valid data provided.");
+  } catch (err) {
+    // Handle any errors that occur during the operations
+    console.error(err);
+    res.status(500).send("An error occurred.");
   }
 });
+
 
 app.get("/log", async (req, res) => {
   const data = await URL.find({});
   return res.render("log", { result: data });
+});
+app.delete("/log", (req, res) => {
+  // Extract the data from the request body
+  const data = req.body.logData;
+
+  // Make sure data is properly received
+  if (!data) {
+    return res.status(400).send("No data provided");
+  }
+
+  // Delete the document from the collection
+  URL.deleteOne({ text: data }, (err) => {
+    if (err) {
+      // Handle any errors during the deletion
+      return res.status(500).send("Error deleting data");
+    }
+
+    // Render the log page or redirect as needed
+    res.render("log");
+  });
 });
 
 app.listen(3001, () => {

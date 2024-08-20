@@ -1,83 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ATS Feedback</title>
-  
-  <style>
-    /* General page styling */
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-  color: #333;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  flex-direction: column;
-}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ATS Feedback</title>
 
-/* Form styling */
-form {
-  margin-bottom: 20px;
-}
+    <style>
+      /* General page styling */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        flex-direction: column;
+      }
 
-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
+      /* Form styling */
+      form {
+        margin-bottom: 20px;
+      }
 
-button:hover {
-  background-color: #0056b3;
-}
+        button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
 
-/* Result section styling */
-p {
-  background-color: #ffffff;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 10px;
-  width: 100%;
-  max-width: 600px;
-  font-size: 16px;
-  line-height: 1.5;
-}
+        button:hover {
+        background-color: #0056b3;
+      }
 
-p:last-child {
-  margin-bottom: 0;
-}
+      /* Result section styling */
+      p {
+        background-color: #ffffff;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 10px;
+        width: 100%;
+        max-width: 600px;
+        font-size: 16px;
+        line-height: 1.5;
+      }
 
-/* Styling for the no results message */
-.no-results {
-  color: #999;
-  font-style: italic;
-}
+      p:last-child {
+        margin-bottom: 0;
+      }
 
-  
-</style>
-</head>
+      /* Styling for the no results message */
+      .no-results {
+        color: #999;
+        font-style: italic;
+      }
+    </style>
+  </head>
 
-<body>
-  <form method="get" action="/">
-    <button type="submit">Home</button>
-  </form>
+  <body>
+    <!-- <form method="get" action="/" style="position: absolute; top: 10px; right: 10px;">
+    <button type="submit" style="background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
+  </form> -->
 
-  <% if (locals.result) { %>
-    <% result.forEach((a) => { %>
-      <p><%= a.text %></p>
-    <% }); %>
-  <% } else { %>
-    <p class="no-results">No results found.</p>
-  <% } %>
-</body>
+    <form method="get" action="/">
+      <button type="submit">Home</button>
+    </form>
+<% if (locals.result.length!==0) { %>
+  <% result.forEach((a) => { %>
+    <form method="post" action="/log" style="display: inline;">
+      <input type="hidden" name="logData" value="<%= a.text %>">
+      <p style="position: relative;">
+        <%= a.text %>          
+        <span style="font-size: 20px; position: absolute; top: 2px; right: 2px; cursor: pointer;" onclick="this.closest('form').submit();">
+          &#10007;
+        </span>
+      </p>
+    </form>
+  <% }); %>
+<% } 
+else{ %>
+  <p>Nothing in th log page</p>
+<%}%>
+
+
+  </body>
 </html>
