@@ -18,10 +18,11 @@ connectToMongoDB("mongodb://127.0.0.1:27017/ai-assist");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
+app.set("views", path.join(__dirname, "..", "views"));
 app.set("view engine", "ejs");
 
 app.get("/", (req, res) => {
-  res.render("index");
+  res.render("index",{selectedOption:"ask-question"});
 });
 
 async function handleAskQuestion(userPrompt) {
@@ -118,7 +119,7 @@ async function handleSummarizeTextbook(req) {
 
 app.post("/", upload.single("pdfFile"), async (req, res) => {
   const { prompt, concept, selectedOption, subjects, hours } = req.body;
-
+  if (!selectedOption) selectedOption = "ask-question";
   let result;
   try {
     switch (selectedOption) {
@@ -135,7 +136,7 @@ app.post("/", upload.single("pdfFile"), async (req, res) => {
         result = await handlePersonalizedStudyPlan(subjects, hours);
         break;
     }
-    res.render("index", { text: result });
+    res.render("index", { selectedOption, text: result });
   } catch (error) {
     res.status(500).send("An error occurred.");
   }
@@ -165,7 +166,6 @@ app.post("/log", async (req, res) => {
     res.status(500).send("An error occurred.");
   }
 });
-
 
 app.get("/log", async (req, res) => {
   const data = await URL.find({});
