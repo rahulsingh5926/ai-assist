@@ -20,6 +20,12 @@
     "multer": "^1.4.5-lts.1",
     "nodemon": "^3.1.4",
     "pdf-parse": "^1.1.1"
+<<<<<<< HEAD
+=======
+  },
+  "engines": {
+    "node": "20.x"
+>>>>>>> 10feb928dad2bd4dc17b7912b161b589d91788c2
   }
 
 }
