@@ -157,6 +157,7 @@
               <form method="post" action="/log">
                 <!-- Display the text -->
                 <input type="hidden" name="sample" value="<%= text %>" />
+               <input type="hidden" id="selectedOption" name="selectedOption" value="ask-question">
                 <!-- Hidden input to submit the text -->
                 <button type="submit">Save</button>
               </form>
@@ -178,6 +179,7 @@
                 <!-- Display the text -->
                 <input type="hidden" name="sample" value="<%= text %>" />
                 <!-- Hidden input to submit the text -->
+                 <input type="hidden" id="selectedOption" name="selectedOption" value="explain-concept">
                 <button type="submit">Save</button>
               </form>
               <% } %>`;
@@ -205,6 +207,7 @@
               <form method="post" action="/log">
                 <!-- Display the text -->
                 <input type="hidden" name="sample" value="<%= text %>" />
+                 <input type="hidden" id="selectedOption" name="selectedOption" value="summarize-textbook">>
                 <!-- Hidden input to submit the text -->
                 <button type="submit">Save</button>
               </form>
@@ -231,6 +234,7 @@
               <form method="post" action="/log">
                 <!-- Display the text -->
                 <input type="hidden" name="sample" value="<%= text %>" />
+                 <input type="hidden" id="selectedOption" name="selectedOption" value="personalized-study-plan">
                 <!-- Hidden input to submit the text -->
                 <button type="submit">Save</button>
               </form>

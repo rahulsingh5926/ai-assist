@@ -145,12 +145,13 @@ app.post("/", upload.single("pdfFile"), async (req, res) => {
 app.post("/log", async (req, res) => {
   const sample = req.body.sample;
   const data = req.body.logData;
+  const selectedOption=req.body.selectedOption;
 
   try {
     if (sample) {
       const textValue = typeof sample === "object" ? JSON.stringify(sample) : sample;
       await URL.create({ text: textValue });
-      return res.render("index"); // Ensure only one response is sent
+      return res.render("index",{selectedOption}); // Ensure only one response is sent
     }
 
     if (data) {
@@ -181,17 +182,18 @@ app.delete("/log", (req, res) => {
   }
 
   // Delete the document from the collection
-  URL.deleteOne({ text: data }, (err) => {
+  URL.deleteOne({ text: data }, async(err) => {
     if (err) {
       // Handle any errors during the deletion
       return res.status(500).send("Error deleting data");
     }
 
     // Render the log page or redirect as needed
-    res.render("log");
+    const data = await URL.find({});
+    res.render("log",{result:data});
   });
 });
 
-app.listen(3001, () => {
-  console.log("Server is running on http://localhost:3001");
+app.listen(3003, () => {
+  console.log("Server is running on http://localhost:3003");
 });

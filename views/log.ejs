@@ -73,7 +73,7 @@
     <form method="get" action="/">
       <button type="submit">Home</button>
     </form>
-<% if (locals.result.length!==0) { %>
+<% if (locals.result && locals.result.length!==0) { %>
   <% result.forEach((a) => { %>
     <form method="post" action="/log" style="display: inline;">
       <input type="hidden" name="logData" value="<%= a.text %>">
